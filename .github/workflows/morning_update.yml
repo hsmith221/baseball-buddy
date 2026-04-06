@@ -1,0 +1,22 @@
+name: Baseball Buddy Morning Update
+
+on:
+  schedule:
+    - cron: '30 11 * * *'  # 7:30 AM ET (EDT = UTC-4, in effect all MLB season)
+  workflow_dispatch:        # Manual trigger for testing
+
+jobs:
+  send-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - run: python baseball_buddy.py
+        env:
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_FROM: ${{ secrets.TWILIO_FROM }}
+          TWILIO_TO: ${{ secrets.TWILIO_TO }}
