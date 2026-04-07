@@ -2,7 +2,6 @@ import os
 import requests
 from datetime import datetime, timedelta
 import pytz
-from twilio.rest import Client
 
 METS_ID = 121
 GUARDIANS_ID = 114
@@ -101,12 +100,7 @@ def main():
     guardians = build_team_message(GUARDIANS_ID, yesterday_str, today_str, season)
     message = f"{mets}\n{guardians}"
 
-    client = Client(os.environ["TWILIO_ACCOUNT_SID"], os.environ["TWILIO_AUTH_TOKEN"])
-    client.messages.create(
-        body=message,
-        from_=os.environ["TWILIO_FROM"],
-        to=os.environ["TWILIO_TO"],
-    )
+    requests.post(os.environ["DISCORD_WEBHOOK_URL"], json={"content": message}, timeout=10).raise_for_status()
     print(message)
 
 
