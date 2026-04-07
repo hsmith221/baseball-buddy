@@ -14,6 +14,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
+      - run: echo "Webhook set=${{ secrets.DISCORD_WEBHOOK_URL != '' }}"
       - run: python baseball_buddy.py
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
